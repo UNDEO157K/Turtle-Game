@@ -1,23 +1,29 @@
 import turtle as t
 import random
+import time 
 
 print("welcome to 4x4 sliding game")
         
-
 sk = t.Turtle()
 sk.hideturtle()
 sk.speed(0.5)
 sk.pensize(5)
-sk.pu()
-sk.goto(400,400)
-sk.pd()
-sk.write("4x4 Sliding Number Game" , align = "center",font = ("arial", 50 , "bold"))
+start_time = time.time()
+game_over = False
+se = t.Turtle()
+se.hideturtle()
+se.pu()
+se.goto(300,100)
+
 
 wn = t.Screen()
 wn.tracer(0)
 wn.bgcolor("light green")
 
-   
+sk.pu()
+sk.goto(0,400)
+sk.pd()
+sk.write("4x4 Sliding Number Game" , align = "center",font = ("arial", 50 , "bold"))
 
 grid = [
     ["A1","A2","A3","A4"],
@@ -124,21 +130,43 @@ for c in all_cells:
         fcell_values[c] = numb.pop()
 
 def check_win():
+    global game_over
     if cell_values == fcell_values:
+        game_over = True
         sk.goto(0, -300)
         sk.color("red")
         sk.write(" You Win! ", align="center", font=("arial", 50, "bold"))
         wn.onclick(None)  
 
+count = 0
+st = t.Turtle()
+st.hideturtle()
+st.pu()
+st.goto(300,200)
+
+def update_steps():
+    st.clear()
+    st.write(f"steps : {count}", align = "left" , font = ("arial" , 50 , "bold"))
+
+def time_updation():
+    if game_over==False:
+        duration = int(time.time() - start_time)
+        se.clear()
+        se.write(f"time : {duration}s" , align = "left" , font = ("arial",50 , "bold"))
+        wn.ontimer(time_updation,1000)
 
 def slide_cells(box):
-    global empty_cell
+    global empty_cell , count
     if empty_cell in get_siders(box):  
         cell_values[empty_cell], cell_values[box] = cell_values[box], None
         draw_cell(empty_cell)
         draw_cell(box)
         empty_cell = box
+        count = count + 1
+        update_steps()
         check_win()
+
+
 
 def click_opt(x, y):
     n = (x,y)
@@ -152,13 +180,11 @@ def click_opt(x, y):
 
 
 
-
-
-
+update_steps()
+time_updation()
 draw_cells()
 wn.onclick(click_opt)
 wn.mainloop()
-
 
 
 
@@ -261,6 +287,7 @@ wn.mainloop()
     
     
     
+
 
 
 
